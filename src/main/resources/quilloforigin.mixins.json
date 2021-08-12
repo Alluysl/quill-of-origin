@@ -4,6 +4,8 @@
   "package": "alluysl.quilloforigin.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "LecternScreenMixin",
+    "ClientPlayNetworkHandlerMixin"
   ],
   "client": [
   ],

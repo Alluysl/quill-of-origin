@@ -1,4 +1,4 @@
-# Quill of Origins
+# Quill of Origin
 
 A Fabric-only mod that allows players with a certain power to record chat messages into books.
 

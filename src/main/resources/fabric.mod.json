@@ -1,38 +1,37 @@
 {
   "schemaVersion": 1,
-  "id": "alluyslorigins",
+  "id": "quilloforigin",
   "version": "${version}",
 
-  "name": "Alluysl's Origins",
-  "description": "A mod that adds origins for the Origin mod",
+  "name": "Quill of Origin",
+  "description": "A mod that adds an Origins power to log the chat into books",
   "authors": [
     "Alluysl"
   ],
   "contact": {
-    "homepage": "https://github.com/Alluysl/alluysl-origins",
-    "sources": "https://github.com/Alluysl/alluysl-origins",
-    "issues": "https://github.com/Alluysl/alluysl-origins/issues"
+    "homepage": "https://github.com/Alluysl/quill-of-origin",
+    "sources": "https://github.com/Alluysl/quill-of-origin",
+    "issues": "https://github.com/Alluysl/quill-of-origin/issues"
   },
 
-  "license": "https://github.com/Alluysl/alluysl-origins/blob/master/LICENSE",
-  "icon": "assets/alluyslorigins/icon.png",
+  "license": "https://github.com/Alluysl/quill-of-origin/blob/master/LICENSE",
+  "icon": "assets/quilloforigin/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "alluysl.alluyslorigins.AlluyslOrigins"
+      "alluysl.quilloforigin.QuillOfOrigin"
     ]
   },
   "mixins": [
-    "alluyslorigins.mixins.json"
+    "quilloforigin.mixins.json"
   ],
 
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
     "minecraft": "1.16.x",
-    "origins": ">=0.7.1",
-    "pehkui": ">=2.1.0"
+    "origins": ">=0.7.1"
   },
   "suggests": {
     "another-mod": "*"

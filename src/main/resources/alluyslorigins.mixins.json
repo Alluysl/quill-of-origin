@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "alluysl.alluyslorigins.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BoatEntityMixin",
+    "LivingEntityMixin"
+  ],
+  "client": [
+    "GameRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

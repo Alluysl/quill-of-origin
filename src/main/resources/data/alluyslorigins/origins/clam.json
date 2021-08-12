@@ -1,0 +1,16 @@
+{
+	"powers": [
+		"alluyslorigins:hidden_pearl",
+		"alluyslorigins:sand_burrow",
+		"alluyslorigins:shell_wielder",
+		"origins:water_breathing",
+		"origins:water_vision",
+		"origins:aqua_affinity",
+		"origins:aquatic"
+	],
+	"icon": "conduit",
+	"order": 24000,
+	"impact": 3,
+	"name": "Clam",
+	"description": "Peaceful inhabitants of the ocean floor, clams are known to produce the wonders that are their pearls."
+}

@@ -1,0 +1,80 @@
+{
+	"type": "origins:multiple",
+	"name": "Sand Burrow",
+	"description": "You dig through sand much faster than others, and through other soft blocks as well, though to a lesser extent.",
+
+	"sand": {
+		"type": "origins:modify_break_speed",
+		"block_condition": {
+			"type": "origins:or",
+			"conditions": [
+				{
+					"type": "origins:in_tag",
+					"tag": "minecraft:sand"
+				},
+				{
+					"type": "origins:in_tag",
+					"tag": "c:sand"
+				}
+			]
+		},
+		"modifier": {
+			"name": "Sand Burrow sand break speed bonus",
+			"value": 0.10,
+			"operation": "addition"
+		}
+	},
+
+	"soft": {
+		"type": "origins:modify_break_speed",
+		"block_condition": {
+			"type": "origins:and",
+			"conditions": [
+				{
+					"type": "origins:or",
+					"conditions": [
+						{
+							"type": "origins:in_tag",
+							"tag": "minecraft:enderman_holdable"
+						},
+						{
+							"type": "origins:in_tag",
+							"tag": "c:dirt"
+						},
+						{
+							"type": "origins:in_tag",
+							"tag": "c:sand"
+						},
+						{
+							"type": "origins:in_tag",
+							"tag": "c:gravel"
+						}
+					]
+				},
+				{
+					"type": "origins:or",
+					"conditions": [
+						{
+							"type": "origins:block",
+							"block": "minecraft:pumpkin"
+						},
+						{
+							"type": "origins:block",
+							"block": "minecraft:carved_pumpkin"
+						},
+						{
+							"type": "origins:block",
+							"block": "minecraft:melon"
+						}
+					],
+					"inverted": true
+				}
+			]
+		},
+		"modifier": {
+			"name": "Sand Burrow soft block break speed bonus",
+			"value": 0.08,
+			"operation": "addition"
+		}
+	}
+}

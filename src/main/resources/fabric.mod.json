@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "alluyslorigins",
+  "version": "${version}",
+
+  "name": "Alluysl's Origins",
+  "description": "A mod that adds origins for the Origin mod",
+  "authors": [
+    "Alluysl"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Alluysl/alluysl-origins",
+    "sources": "https://github.com/Alluysl/alluysl-origins",
+    "issues": "https://github.com/Alluysl/alluysl-origins/issues"
+  },
+
+  "license": "https://github.com/Alluysl/alluysl-origins/blob/master/LICENSE",
+  "icon": "assets/alluyslorigins/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "alluysl.alluyslorigins.AlluyslOrigins"
+    ]
+  },
+  "mixins": [
+    "alluyslorigins.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x",
+    "origins": ">=0.7.1",
+    "pehkui": ">=2.1.0"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

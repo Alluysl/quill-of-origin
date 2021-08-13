@@ -26,6 +26,7 @@
   "mixins": [
     "quilloforigin.mixins.json"
   ],
+  "accessWidener": "quilloforigin.accesswidener",
 
   "depends": {
     "fabricloader": ">=0.7.4",

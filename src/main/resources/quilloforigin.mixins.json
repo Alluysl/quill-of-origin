@@ -4,6 +4,7 @@
   "package": "alluysl.quilloforigin.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "BookCloningRecipeMixin",
     "ClientPlayNetworkHandlerMixin",
     "LecternBlockEntityMixin",
     "LecternScreenMixin",
@@ -15,6 +16,7 @@
     "SayCommandMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
+    "MinecraftServerMixin",
     "TameableEntityMixin",
     "TeamMsgCommandMixin",
     "TellRawCommandMixin"

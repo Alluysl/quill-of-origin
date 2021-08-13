@@ -2,7 +2,6 @@ package alluysl.quilloforigin.power.factory;
 
 import alluysl.quilloforigin.QuillOfOrigin;
 import alluysl.quilloforigin.power.ScribePower;
-import alluysl.quilloforigin.registry.ChatMessageConditions;
 import alluysl.quilloforigin.util.ChatMessage;
 import alluysl.quilloforigin.util.DataTypes;
 import io.github.apace100.origins.power.factory.PowerFactory;

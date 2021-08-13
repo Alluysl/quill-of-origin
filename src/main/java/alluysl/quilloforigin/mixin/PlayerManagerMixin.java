@@ -6,21 +6,14 @@ import net.minecraft.network.MessageType;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.List;
 import java.util.UUID;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {
-
-    @Shadow @Final private List<ServerPlayerEntity> players;
-
-    @Shadow public abstract void broadcastChatMessage(Text message, MessageType type, UUID senderUuid);
 
     @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;broadcastChatMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/MessageType;Ljava/util/UUID;)V"))
     public void captureConnectionMessage(PlayerManager playerManager, Text message, MessageType type, UUID senderUuid){

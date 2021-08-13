@@ -15,9 +15,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ChatBookItem extends WrittenBookItem {
 
     public ChatBookItem(Settings settings){

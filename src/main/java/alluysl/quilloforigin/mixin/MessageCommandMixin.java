@@ -2,12 +2,9 @@ package alluysl.quilloforigin.mixin;
 
 import alluysl.quilloforigin.power.ScribePower;
 import alluysl.quilloforigin.util.ChatMessageEvent;
-import net.minecraft.entity.Entity;
 import net.minecraft.server.command.MessageCommand;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;

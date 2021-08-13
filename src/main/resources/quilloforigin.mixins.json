@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ClientPlayNetworkHandlerMixin",
+    "LecternBlockEntityMixin",
     "LecternScreenMixin",
     "MeCommandMixin",
     "MessageCommandMixin",
@@ -12,7 +13,6 @@
     "PlayerManagerAccessor",
     "PlayerManagerMixin",
     "SayCommandMixin",
-    "ServerCommandSourceAccessor",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "TameableEntityMixin",

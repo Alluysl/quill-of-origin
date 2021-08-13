@@ -8,16 +8,39 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChatBookItem extends WrittenBookItem {
 
     public ChatBookItem(Settings settings){
         super(settings);
+    }
+
+    private static boolean fitsIn(Text text){
+        int remainingLines = 14;
+        for (String substring : text.getString().split("\\R", -1)){
+            if (substring.length() > 16){ // fit words
+                int len = 0;
+                for (String word : substring.split("\\s", -1)){
+                    if (word.length() + len > 16){
+                        int consumed = Math.max((word.length() + len + 15) / 16, 1);
+                        remainingLines -= consumed;
+                        len = Math.max(word.length() - 16 * consumed, 0);
+                    } else
+                        len += word.length() + 1;
+                }
+            } else
+                --remainingLines;
+        }
+        return remainingLines >= 0;
     }
 
     private static void appendTextToListTag(ListTag listTag, Text text){
@@ -26,6 +49,11 @@ public class ChatBookItem extends WrittenBookItem {
     }
 
     public static void appendText(ItemStack stack, Text text){
+
+        MutableText textln = new LiteralText("");
+        textln.append(text);
+        textln.append(Text.of("\n"));
+
         CompoundTag tag = stack.getOrCreateTag();
 
         if (!tag.contains("title", 8))
@@ -40,17 +68,17 @@ public class ChatBookItem extends WrittenBookItem {
 
         int lastId = listTag.size() - 1;
         if (lastId < 0) // no pages yet
-            appendTextToListTag(listTag, text);
+            appendTextToListTag(listTag, textln);
         else {
             MutableText lastPage = Text.Serializer.fromJson(listTag.get(lastId).asString());
             if (lastPage != null){
-                String candidate = Text.Serializer.toJson(lastPage.append(text));
-                if (candidate.length() < 32768) // make sure book will be valid
+                String candidate = Text.Serializer.toJson(lastPage.append(textln));
+                if (candidate.length() < 32768 && fitsIn(lastPage)) // make sure book will be valid
                     listTag.set(lastId, StringTag.of(candidate));
                 else // new string too long
-                    appendTextToListTag(listTag, text);
+                    appendTextToListTag(listTag, textln);
             } else // error reading
-                appendTextToListTag(listTag, text);
+                appendTextToListTag(listTag, textln);
         }
     }
 

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class LecternScreenMixin {
 
     @Redirect(method = "updatePageProvider", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/BookScreen$Contents;create(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/client/gui/screen/ingame/BookScreen$Contents;"))
-    static BookScreen.Contents create(ItemStack stack) {
+    public BookScreen.Contents create(ItemStack stack) {
         Item item = stack.getItem();
         if (item == Items.WRITTEN_BOOK || item == QuillOfOrigin.CHAT_BOOK) {
             return new BookScreen.WrittenBookContents(stack);

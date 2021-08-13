@@ -1,5 +1,7 @@
 package alluysl.quilloforigin;
 
+import alluysl.quilloforigin.power.factory.PowerFactories;
+import alluysl.quilloforigin.registry.ChatMessageConditions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
@@ -22,5 +24,12 @@ public class QuillOfOrigin implements ModInitializer {
 		LOGGER.info("Quill of Origin initialized, ready to write down your stories!");
 
 		Registry.register(Registry.ITEM, new Identifier(MODID, "chat_book"), CHAT_BOOK);
+		ChatMessageConditions.register();
+		PowerFactories.register();
 	}
+
+	public static Identifier identifier(String path) {
+		return new Identifier(MODID, path);
+	}
+
 }

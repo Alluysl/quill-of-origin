@@ -4,8 +4,20 @@
   "package": "alluysl.quilloforigin.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ClientPlayNetworkHandlerMixin",
     "LecternScreenMixin",
-    "ClientPlayNetworkHandlerMixin"
+    "MeCommandMixin",
+    "MessageCommandMixin",
+    "PlayerAdvancementTrackerMixin",
+    "PlayerManagerAccessor",
+    "PlayerManagerMixin",
+    "SayCommandMixin",
+    "ServerCommandSourceAccessor",
+    "ServerPlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin",
+    "TameableEntityMixin",
+    "TeamMsgCommandMixin",
+    "TellRawCommandMixin"
   ],
   "client": [
   ],

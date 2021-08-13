@@ -19,12 +19,12 @@ public class MessageCommandMixin {
 
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;sendSystemMessage(Lnet/minecraft/text/Text;Ljava/util/UUID;)V"))
     private static void captureIncomingTellMessage(ServerPlayerEntity serverPlayerEntity, Text message, UUID senderUuid){
-        ScribePower.captureSystemMessage(serverPlayerEntity, ChatMessageEvent.TELL, message, senderUuid);
+        ScribePower.captureSystemMessage(serverPlayerEntity, ChatMessageEvent.TELL_INCOMING, message, senderUuid);
     }
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "method_31164", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;sendSystemMessage(Lnet/minecraft/text/Text;Ljava/util/UUID;)V"))
     private static void captureOutgoingTellMessage(ServerPlayerEntity serverPlayerEntity, Text message, UUID senderUuid){
-        ScribePower.captureSystemMessage(serverPlayerEntity, ChatMessageEvent.TELL, message, senderUuid);
+        ScribePower.captureSystemMessage(serverPlayerEntity, ChatMessageEvent.TELL_OUTGOING, message, senderUuid);
     }
 }

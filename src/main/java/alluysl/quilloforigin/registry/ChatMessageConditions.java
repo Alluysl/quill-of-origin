@@ -25,12 +25,12 @@ public class ChatMessageConditions {
             .add("value", SerializableDataType.BOOLEAN),
             (data, message) -> data.getBoolean("value")));
         register(new ConditionFactory<>(QuillOfOrigin.identifier("and"), new SerializableData()
-            .add("conditions", DataTypes.CHAT_MESSAGE_CONDITION),
+            .add("conditions", DataTypes.CHAT_MESSAGE_CONDITIONS),
             (data, message) -> ((List<ConditionFactory<ChatMessage>.Instance>)data.get("conditions")).stream().allMatch(
                 condition -> condition.test(message)
             )));
         register(new ConditionFactory<>(QuillOfOrigin.identifier("or"), new SerializableData()
-            .add("conditions", DataTypes.CHAT_MESSAGE_CONDITION),
+            .add("conditions", DataTypes.CHAT_MESSAGE_CONDITIONS),
             (data, message) -> ((List<ConditionFactory<ChatMessage>.Instance>)data.get("conditions")).stream().anyMatch(
                 condition -> condition.test(message)
             )));

@@ -16,7 +16,6 @@
     "SayCommandMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
-    "MinecraftServerMixin",
     "TameableEntityMixin",
     "TeamMsgCommandMixin",
     "TellRawCommandMixin"

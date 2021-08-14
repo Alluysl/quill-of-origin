@@ -3,6 +3,7 @@ package alluysl.quilloforigin;
 import alluysl.quilloforigin.power.factory.PowerFactories;
 import alluysl.quilloforigin.registry.ChatMessageConditions;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
@@ -39,6 +40,8 @@ public class QuillOfOrigin implements ModInitializer {
 
 		if (!GameRuleRegistry.hasRegistration("copiesStayChatBooks"))
 			COPIES_STAY_CHAT_BOOKS = GameRuleRegistry.register("copiesStayChatBooks", GameRules.Category.PLAYER, GameRules.BooleanRule.create(copiesStayChatBooks));
+
+		ServerTickEvents.START_SERVER_TICK.register(server -> updateModGameRules(server.getGameRules()));
 	}
 
 	public static Identifier identifier(String path) {

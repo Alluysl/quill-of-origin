@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(BookCloningRecipe.class)
 public class BookCloningRecipeMixin {
 
-    // Commented out code is if we wanted copied chat books to stay chat books
-
     private boolean isCopyingChatBook;
 
     @Redirect(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))

@@ -8,6 +8,7 @@ import alluysl.quilloforigin.util.ChatMessageEvent;
 import io.github.apace100.origins.component.OriginComponent;
 import io.github.apace100.origins.power.Power;
 import io.github.apace100.origins.power.PowerType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,8 @@ import net.minecraft.text.Text;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class ScribePower extends Power {
@@ -27,14 +30,24 @@ public class ScribePower extends Power {
     private final boolean offhand;
     private final boolean hotbar;
     private final boolean inventory;
+
+    private final Consumer<Entity> entityAction;
+    private final Consumer<ItemStack> itemAction;
+
     private final Predicate<ChatMessage> messageCondition;
 
-    public ScribePower(PowerType<?> type, PlayerEntity player, boolean mainhand, boolean offhand, boolean hotbar, boolean inventory, Predicate<ChatMessage> messageCondition){
+
+    public ScribePower(PowerType<?> type, PlayerEntity player,
+                       boolean mainhand, boolean offhand, boolean hotbar, boolean inventory,
+                       Consumer<Entity> entityAction, Consumer<ItemStack> itemAction,
+                       Predicate<ChatMessage> messageCondition){
         super(type, player);
         this.mainhand = mainhand;
         this.offhand = offhand;
         this.hotbar = hotbar;
         this.inventory = inventory;
+        this.entityAction = entityAction;
+        this.itemAction = itemAction;
         this.messageCondition = messageCondition;
     }
 
@@ -67,10 +80,18 @@ public class ScribePower extends Power {
             if (inventory)
                 for (int i = 9; i < 36; ++i)
                     stacks.add(player.inventory.getStack(i));
+            AtomicBoolean hasBeenLogged = new AtomicBoolean(false);
             stacks.forEach(stack -> {
-                if (stack.getItem() == QuillOfOrigin.CHAT_BOOK)
+                if (stack.getItem() == QuillOfOrigin.CHAT_BOOK){
                     ChatBookItem.appendText(stack, message.getMessage());
+                    hasBeenLogged.set(true);
+                    if (itemAction != null)
+                        itemAction.accept(stack);
+                }
             });
+
+            if (entityAction != null && hasBeenLogged.get())
+                entityAction.accept(player);
         }
     }
 }

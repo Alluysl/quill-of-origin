@@ -14,7 +14,7 @@
     "issues": "https://github.com/Alluysl/quill-of-origin/issues"
   },
 
-  "license": "https://github.com/Alluysl/quill-of-origin/blob/master/LICENSE",
+  "license": "MIT",
   "icon": "assets/quilloforigin/icon.png",
 
   "environment": "*",

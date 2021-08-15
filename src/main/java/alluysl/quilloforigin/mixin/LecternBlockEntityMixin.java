@@ -30,8 +30,8 @@ public abstract class LecternBlockEntityMixin extends BlockEntity { // extending
     protected abstract ServerCommandSource getCommandSource(@Nullable PlayerEntity player);
 
     @Inject(method = "resolveBook", at = @At("HEAD"))
-    public void makeResolveChatBook(ItemStack book, PlayerEntity player, CallbackInfoReturnable<ItemStack> cir){
-        if (world instanceof ServerWorld && book.getItem() == Items.WRITTEN_BOOK) {
+    public void resolveChatBook(ItemStack book, PlayerEntity player, CallbackInfoReturnable<ItemStack> cir){
+        if (world instanceof ServerWorld && book.getItem() == QuillOfOrigin.CHAT_BOOK) {
             WrittenBookItem.resolve(book, getCommandSource(player), player);
         }
     }

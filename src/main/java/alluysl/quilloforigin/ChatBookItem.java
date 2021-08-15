@@ -77,6 +77,8 @@ public class ChatBookItem extends WrittenBookItem {
             } else // error reading
                 appendTextToListTag(listTag, textln);
         }
+
+        tag.putBoolean("resolved", false);
     }
 
     private static void makePlayerOpenEditBookScreen(PlayerEntity player, ItemStack book, Hand hand) {

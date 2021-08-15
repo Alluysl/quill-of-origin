@@ -41,6 +41,7 @@ public class QuillOfOrigin implements ModInitializer {
 		if (!GameRuleRegistry.hasRegistration("copiesStayChatBooks"))
 			COPIES_STAY_CHAT_BOOKS = GameRuleRegistry.register("copiesStayChatBooks", GameRules.Category.PLAYER, GameRules.BooleanRule.create(copiesStayChatBooks));
 
+		// Each tick update gamerule boolean (used because gamerules aren't accessible in the context where it has to be used)
 		ServerTickEvents.START_SERVER_TICK.register(server -> updateModGameRules(server.getGameRules()));
 	}
 

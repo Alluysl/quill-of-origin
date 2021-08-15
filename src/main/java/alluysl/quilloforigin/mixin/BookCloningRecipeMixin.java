@@ -18,11 +18,14 @@ public class BookCloningRecipeMixin {
 
     @Redirect(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
     public Item checkSingleChatBookMatch(ItemStack itemStack){
+        // Pretend the item is a written book for this check if it's a chat book, so they have the same behavior in this method
+        // (which would have happened naturally if an instanceof WrittenBookItem check was used by Mojang instead of using getItem)
         return itemStack.getItem() == QuillOfOrigin.CHAT_BOOK ? Items.WRITTEN_BOOK : itemStack.getItem();
     }
 
     @Redirect(method = "craft", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
     public Item checkSingleChatBookCraft(ItemStack itemStack){
+        // Same thing as above except we also keep which type of book is being crafted in a buffer for use in the injection below
         if (itemStack.getItem() == QuillOfOrigin.CHAT_BOOK)
             isCopyingChatBook = true;
         else if (itemStack.getItem() == Items.WRITTEN_BOOK)

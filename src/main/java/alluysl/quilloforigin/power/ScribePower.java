@@ -36,7 +36,6 @@ public class ScribePower extends Power {
 
     private final Predicate<ChatMessage> messageCondition;
 
-
     public ScribePower(PowerType<?> type, PlayerEntity player,
                        boolean mainhand, boolean offhand, boolean hotbar, boolean inventory,
                        Consumer<Entity> entityAction, Consumer<ItemStack> itemAction,
@@ -52,6 +51,7 @@ public class ScribePower extends Power {
     }
 
     public static void captureBroadcastMessage(PlayerManager playerManager, ChatMessageEvent event, Text message, MessageType type, UUID senderUuid){
+        // For each scribe power on each player the message is being broadcasted to, log the message and execute the actions if any
         ((PlayerManagerAccessor)playerManager).getPlayers().stream()
             .filter(player -> OriginComponent.hasPower(player, ScribePower.class)).forEach(player ->
                 OriginComponent.getPowers(player, ScribePower.class).forEach(scribePower -> scribePower.tryLogMessage(
@@ -61,6 +61,7 @@ public class ScribePower extends Power {
     }
 
     public static void captureSystemMessage(ServerPlayerEntity player, ChatMessageEvent event, Text message, UUID senderUuid){
+        // For each scribe power on the player the message is being sent to, log the message and execute the actions if any
         OriginComponent.getPowers(player, ScribePower.class).forEach(scribePower -> scribePower.tryLogMessage(
             new ChatMessage(player.getServerWorld(), event, message, MessageType.SYSTEM, senderUuid)
         ));
@@ -69,7 +70,7 @@ public class ScribePower extends Power {
 
     public void tryLogMessage(ChatMessage message){
         if (messageCondition == null || messageCondition.test(message)){
-            Set<ItemStack> stacks = new HashSet<>();
+            Set<ItemStack> stacks = new HashSet<>(); // using a set to avoid duplicates (hotbar-mainhand)
             if (mainhand)
                 stacks.add(player.getEquippedStack(EquipmentSlot.MAINHAND));
             if (offhand)
@@ -78,7 +79,7 @@ public class ScribePower extends Power {
                 for (int i = 0; i < 9; ++i)
                     stacks.add(player.inventory.getStack(i));
             if (inventory)
-                for (int i = 9; i < 36; ++i)
+                for (int i = 9; i < 36; ++i) // only the main 27 slots, not the armor slots
                     stacks.add(player.inventory.getStack(i));
             AtomicBoolean hasBeenLogged = new AtomicBoolean(false);
             stacks.forEach(stack -> {

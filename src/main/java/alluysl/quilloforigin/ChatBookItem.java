@@ -21,17 +21,24 @@ public class ChatBookItem extends WrittenBookItem {
         super(settings);
     }
 
+    /**
+     * Whether the text would fit in the page.
+     * Assumes the worst case scenario by considering all characters to take the largest possible width.
+     * Considers the fact that words will only be cut if they started the line and can't even fit in it.
+     */
     private static boolean fitsIn(Text text){
         int remainingLines = 14;
-        for (String substring : text.getString().split("\\R", -1)){
-            if (substring.length() > 16){ // fit words
-                int len = 0;
-                for (String word : substring.split("\\s", -1)){
-                    if (word.length() + len > 16){
+        for (String textLine : text.getString().split("\\R", -1)){ // for each text line
+            if (textLine.length() > 16){ // if the text line doesn't fit in a book line, fit words as best as possible
+                int len = 0; // current book line cumulated length
+                for (String word : textLine.split("\\s", -1)){ // for each word
+                    if (word.length() + len > 16){ // goes to new line
+                        // 16 or less characters would have consumed (16 + 15) / 16 = 1 line (the old line)
+                        // 17 to 32 consume 2 lines in total (up to 16 on each line), etc
                         int consumed = Math.max((word.length() + len + 15) / 16, 1);
                         remainingLines -= consumed;
-                        len = Math.max(word.length() - 16 * consumed, 0);
-                    } else
+                        len = Math.max(word.length() - 16 * consumed, 0); // remaining characters on last line
+                    } else // can fit in the current line
                         len += word.length() + 1;
                 }
             } else
@@ -45,6 +52,11 @@ public class ChatBookItem extends WrittenBookItem {
             listTag.add(StringTag.of(Text.Serializer.toJson(text)));
     }
 
+    /**
+     * Adds text to the chat book(s) in the stack.
+     * If the text to add doesn't fit at the end of the last page, puts it on a new page (which might overflow for e.g. tellraw messages from command blocks or functions).
+     * Otherwise appends it to the last page.
+     */
     public static void appendText(ItemStack stack, Text text){
 
         MutableText textln = new LiteralText("");

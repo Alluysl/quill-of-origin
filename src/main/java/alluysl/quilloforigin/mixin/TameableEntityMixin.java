@@ -19,5 +19,7 @@ public class TameableEntityMixin {
     public void captureTellMessage(LivingEntity entity, Text message, UUID senderUuid){
         if (entity instanceof ServerPlayerEntity)
             ScribePower.captureSystemMessage((ServerPlayerEntity)entity, ChatMessageEvent.PET_DEATH, message, senderUuid);
+        else // mere future-proofing: onDeath never calls this with a non-ServerPlayerEntity argument in 1.16/1.17
+            entity.sendSystemMessage(message, senderUuid);
     }
 }

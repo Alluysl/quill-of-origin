@@ -22,6 +22,6 @@ public class ClientPlayNetworkHandlerMixin {
     @Inject(method = "onOpenWrittenBook", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
     public void openChatBookScreen(OpenWrittenBookS2CPacket packet, CallbackInfo ci, ItemStack itemStack){
         if (itemStack.getItem() == QuillOfOrigin.CHAT_BOOK)
-            this.client.openScreen(new BookScreen(new BookScreen.WrittenBookContents(itemStack)));
+            this.client.setScreen(new BookScreen(new BookScreen.WrittenBookContents(itemStack)));
     }
 }

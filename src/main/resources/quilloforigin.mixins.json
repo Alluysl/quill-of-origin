@@ -11,6 +11,7 @@
     "MeCommandMixin",
     "MessageCommandMixin",
     "PlayerAdvancementTrackerMixin",
+    "PlayerEntityAccessor",
     "PlayerManagerAccessor",
     "PlayerManagerMixin",
     "SayCommandMixin",

@@ -1,7 +1,7 @@
 package alluysl.quilloforigin.util;
 
 import alluysl.quilloforigin.registry.ModRegistries;
-import io.github.apace100.origins.power.factory.condition.ConditionType;
+import io.github.apace100.apoli.power.factory.condition.ConditionType;
 
 public class ConditionTypes {
 

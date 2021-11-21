@@ -2,15 +2,16 @@ package alluysl.quilloforigin.power;
 
 import alluysl.quilloforigin.ChatBookItem;
 import alluysl.quilloforigin.QuillOfOrigin;
+import alluysl.quilloforigin.mixin.PlayerEntityAccessor;
 import alluysl.quilloforigin.mixin.PlayerManagerAccessor;
 import alluysl.quilloforigin.util.ChatMessage;
 import alluysl.quilloforigin.util.ChatMessageEvent;
-import io.github.apace100.origins.component.OriginComponent;
-import io.github.apace100.origins.power.Power;
-import io.github.apace100.origins.power.PowerType;
+import io.github.apace100.apoli.component.PowerHolderComponent;
+import io.github.apace100.apoli.power.Power;
+import io.github.apace100.apoli.power.PowerType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.MessageType;
 import net.minecraft.server.PlayerManager;
@@ -22,6 +23,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class ScribePower extends Power {
@@ -36,11 +38,11 @@ public class ScribePower extends Power {
 
     private final Predicate<ChatMessage> messageCondition;
 
-    public ScribePower(PowerType<?> type, PlayerEntity player,
+    public ScribePower(PowerType<?> type, LivingEntity entity,
                        boolean mainhand, boolean offhand, boolean hotbar, boolean inventory,
                        Consumer<Entity> entityAction, Consumer<ItemStack> itemAction,
                        Predicate<ChatMessage> messageCondition){
-        super(type, player);
+        super(type, entity);
         this.mainhand = mainhand;
         this.offhand = offhand;
         this.hotbar = hotbar;
@@ -50,19 +52,28 @@ public class ScribePower extends Power {
         this.messageCondition = messageCondition;
     }
 
-    public static void captureBroadcastMessage(PlayerManager playerManager, ChatMessageEvent event, Text message, MessageType type, UUID senderUuid){
+    public static void handleBroadcastMessage(PlayerManager playerManager, ChatMessageEvent event, Text message, MessageType type, UUID senderUuid){
         // For each scribe power on each player the message is being broadcasted to, log the message and execute the actions if any
         ((PlayerManagerAccessor)playerManager).getPlayers().stream()
-            .filter(player -> OriginComponent.hasPower(player, ScribePower.class)).forEach(player ->
-                OriginComponent.getPowers(player, ScribePower.class).forEach(scribePower -> scribePower.tryLogMessage(
+            .filter(player -> PowerHolderComponent.hasPower(player, ScribePower.class)).forEach(player ->
+                PowerHolderComponent.getPowers(player, ScribePower.class).forEach(scribePower -> scribePower.tryLogMessage(
                     new ChatMessage(player.getServerWorld(), event, message, type, senderUuid)
                 )));
+    }
+
+    public static void captureBroadcastMessage(PlayerManager playerManager, ChatMessageEvent event, Text message, MessageType type, UUID senderUuid){
+        handleBroadcastMessage(playerManager, event, message, type, senderUuid);
         playerManager.broadcastChatMessage(message, type, senderUuid);
+    }
+
+    public static void captureBroadcast(PlayerManager playerManager, ChatMessageEvent event, Text message, Function<ServerPlayerEntity, Text> messageFactory, MessageType type, UUID senderUuid){
+        handleBroadcastMessage(playerManager, event, message, type, senderUuid);
+        playerManager.broadcast(message, messageFactory, type, senderUuid);
     }
 
     public static void captureSystemMessage(ServerPlayerEntity player, ChatMessageEvent event, Text message, UUID senderUuid){
         // For each scribe power on the player the message is being sent to, log the message and execute the actions if any
-        OriginComponent.getPowers(player, ScribePower.class).forEach(scribePower -> scribePower.tryLogMessage(
+        PowerHolderComponent.getPowers(player, ScribePower.class).forEach(scribePower -> scribePower.tryLogMessage(
             new ChatMessage(player.getServerWorld(), event, message, MessageType.SYSTEM, senderUuid)
         ));
         player.sendSystemMessage(message, senderUuid);
@@ -72,15 +83,17 @@ public class ScribePower extends Power {
         if (messageCondition == null || messageCondition.test(message)){
             Set<ItemStack> stacks = new HashSet<>(); // using a set to avoid duplicates (hotbar-mainhand)
             if (mainhand)
-                stacks.add(player.getEquippedStack(EquipmentSlot.MAINHAND));
+                stacks.add(entity.getEquippedStack(EquipmentSlot.MAINHAND));
             if (offhand)
-                stacks.add(player.getEquippedStack(EquipmentSlot.OFFHAND));
-            if (hotbar)
-                for (int i = 0; i < 9; ++i)
-                    stacks.add(player.inventory.getStack(i));
-            if (inventory)
-                for (int i = 9; i < 36; ++i) // only the main 27 slots, not the armor slots
-                    stacks.add(player.inventory.getStack(i));
+                stacks.add(entity.getEquippedStack(EquipmentSlot.OFFHAND));
+            if (entity instanceof PlayerEntityAccessor player){
+                if (hotbar)
+                    for (int i = 0; i < 9; ++i)
+                        stacks.add(player.getInventory().getStack(i));
+                if (inventory)
+                    for (int i = 9; i < 36; ++i) // only the main 27 slots, not the armor slots
+                        stacks.add(player.getInventory().getStack(i));
+            }
             AtomicBoolean hasBeenLogged = new AtomicBoolean(false);
             stacks.forEach(stack -> {
                 if (stack.getItem() == QuillOfOrigin.CHAT_BOOK){
@@ -92,7 +105,7 @@ public class ScribePower extends Power {
             });
 
             if (entityAction != null && hasBeenLogged.get())
-                entityAction.accept(player);
+                entityAction.accept(entity);
         }
     }
 }

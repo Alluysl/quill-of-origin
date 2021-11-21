@@ -4,9 +4,11 @@ import alluysl.quilloforigin.QuillOfOrigin;
 import alluysl.quilloforigin.util.ChatMessage;
 import alluysl.quilloforigin.util.ChatMessageEvent;
 import alluysl.quilloforigin.util.DataTypes;
-import io.github.apace100.origins.power.factory.condition.ConditionFactory;
-import io.github.apace100.origins.util.SerializableData;
-import io.github.apace100.origins.util.SerializableDataType;
+import io.github.apace100.apoli.data.ApoliDataTypes;
+import io.github.apace100.apoli.power.factory.condition.ConditionFactory;
+import io.github.apace100.calio.data.SerializableData;
+import io.github.apace100.calio.data.SerializableDataType;
+import io.github.apace100.calio.data.SerializableDataTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.MessageType;
@@ -19,7 +21,7 @@ public class ChatMessageConditions {
     @SuppressWarnings("unchecked")
     public static void register() {
         register(new ConditionFactory<>(QuillOfOrigin.identifier("constant"), new SerializableData()
-            .add("value", SerializableDataType.BOOLEAN),
+            .add("value", SerializableDataTypes.BOOLEAN),
             (data, message) -> data.getBoolean("value")));
         register(new ConditionFactory<>(QuillOfOrigin.identifier("and"), new SerializableData()
             .add("conditions", DataTypes.CHAT_MESSAGE_CONDITIONS),
@@ -32,7 +34,7 @@ public class ChatMessageConditions {
                 condition -> condition.test(message)
             )));
         register(new ConditionFactory<>(QuillOfOrigin.identifier("sent_by_entity"), new SerializableData()
-            .add("entity_condition", SerializableDataType.ENTITY_CONDITION, null),
+            .add("entity_condition", ApoliDataTypes.ENTITY_CONDITION, null),
             (data, message) -> {
                 Entity entity = message.getEntity();
                 return entity != null &&
@@ -42,8 +44,8 @@ public class ChatMessageConditions {
             }));
         register(new ConditionFactory<>(QuillOfOrigin.identifier("sent_by_server"), new SerializableData(), (data, message) -> message.getEntity() == null));
         register(new ConditionFactory<>(QuillOfOrigin.identifier("message_event"), new SerializableData()
-            .add("message_event", SerializableDataType.STRING, null)
-            .add("message_events", SerializableDataType.list(SerializableDataType.STRING), null),
+            .add("message_event", SerializableDataTypes.STRING, null)
+            .add("message_events", SerializableDataType.list(SerializableDataTypes.STRING), null),
             (data, message) ->
                  data.isPresent("message_event")
                         && ChatMessageEvent.valueOf(data.getString("message_event").toUpperCase()) == message.getEvent()
@@ -52,8 +54,8 @@ public class ChatMessageConditions {
                             ChatMessageEvent.valueOf(source.toUpperCase()) == message.getEvent())
             ));
         register(new ConditionFactory<>(QuillOfOrigin.identifier("message_type"), new SerializableData()
-            .add("message_type", SerializableDataType.STRING, null)
-            .add("message_types", SerializableDataType.list(SerializableDataType.STRING), null),
+            .add("message_type", SerializableDataTypes.STRING, null)
+            .add("message_types", SerializableDataType.list(SerializableDataTypes.STRING), null),
             (data, message) ->
                  data.isPresent("message_type")
                         && MessageType.valueOf(data.getString("message_type").toUpperCase()) == message.getType()

@@ -16,24 +16,27 @@ public class BookCloningRecipeMixin {
 
     private boolean isCopyingChatBook;
 
-    @Redirect(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
-    public Item checkSingleChatBookMatch(ItemStack itemStack){
+    @Redirect(method = "matches(Lnet/minecraft/inventory/CraftingInventory;Lnet/minecraft/world/World;)Z",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isOf(Lnet/minecraft/item/Item;)Z"))
+    public boolean checkSingleChatBookMatch(ItemStack itemStack, Item item){
         // Pretend the item is a written book for this check if it's a chat book, so they have the same behavior in this method
         // (which would have happened naturally if an instanceof WrittenBookItem check was used by Mojang instead of using getItem)
-        return itemStack.getItem() == QuillOfOrigin.CHAT_BOOK ? Items.WRITTEN_BOOK : itemStack.getItem();
+        return item == Items.WRITTEN_BOOK && itemStack.isOf(QuillOfOrigin.CHAT_BOOK) || itemStack.isOf(item);
     }
 
-    @Redirect(method = "craft", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
-    public Item checkSingleChatBookCraft(ItemStack itemStack){
+    @Redirect(method = "craft(Lnet/minecraft/inventory/CraftingInventory;)Lnet/minecraft/item/ItemStack;",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isOf(Lnet/minecraft/item/Item;)Z"))
+    public boolean checkSingleChatBookCraft(ItemStack itemStack, Item item){
         // Same thing as above except we also keep which type of book is being crafted in a buffer for use in the injection below
-        if (itemStack.getItem() == QuillOfOrigin.CHAT_BOOK)
+        if (itemStack.isOf(QuillOfOrigin.CHAT_BOOK))
             isCopyingChatBook = true;
-        else if (itemStack.getItem() == Items.WRITTEN_BOOK)
+        else if (itemStack.isOf(Items.WRITTEN_BOOK))
             isCopyingChatBook = false;
-        return itemStack.getItem() == QuillOfOrigin.CHAT_BOOK ? Items.WRITTEN_BOOK : itemStack.getItem();
+        return item == Items.WRITTEN_BOOK && itemStack.isOf(QuillOfOrigin.CHAT_BOOK) || itemStack.isOf(item);
     }
 
-    @ModifyArg(method = "craft", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;<init>(Lnet/minecraft/item/ItemConvertible;I)V"), index = 0)
+    @ModifyArg(method = "craft(Lnet/minecraft/inventory/CraftingInventory;)Lnet/minecraft/item/ItemStack;",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;<init>(Lnet/minecraft/item/ItemConvertible;I)V"), index = 0)
     public ItemConvertible makeCopyAChatBook(ItemConvertible item){
         return isCopyingChatBook && QuillOfOrigin.copiesStayChatBooks ? QuillOfOrigin.CHAT_BOOK : item;
     }

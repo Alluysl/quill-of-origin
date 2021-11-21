@@ -2,9 +2,9 @@ package alluysl.quilloforigin;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
@@ -47,9 +47,9 @@ public class ChatBookItem extends WrittenBookItem {
         return remainingLines >= 0;
     }
 
-    private static void appendTextToListTag(ListTag listTag, Text text){
+    private static void appendTextToListTag(NbtList listTag, Text text){
         if (listTag.size() <= 100) // I saw somewhere in the code (don't remember where) a check that pages shouldn't go above 100 so don't add if hit the max
-            listTag.add(StringTag.of(Text.Serializer.toJson(text)));
+            listTag.add(NbtString.of(Text.Serializer.toJson(text)));
     }
 
     /**
@@ -63,7 +63,7 @@ public class ChatBookItem extends WrittenBookItem {
         textln.append(text);
         textln.append(Text.of("\n"));
 
-        CompoundTag tag = stack.getOrCreateTag();
+        NbtCompound tag = stack.getOrCreateNbt();
 
         if (!tag.contains("title", 8))
             tag.putString("title", "Chat Remnants");
@@ -71,9 +71,9 @@ public class ChatBookItem extends WrittenBookItem {
         tag.putString("author", "The Community");
 
         if (!tag.contains("pages", 9))
-            tag.put("pages", new ListTag());
+            tag.put("pages", new NbtList());
 
-        ListTag listTag = tag.getList("pages", 8);
+        NbtList listTag = tag.getList("pages", 8);
 
         int lastId = listTag.size() - 1;
         if (lastId < 0) // no pages yet
@@ -83,7 +83,7 @@ public class ChatBookItem extends WrittenBookItem {
             if (lastPage != null){
                 String candidate = Text.Serializer.toJson(lastPage.append(textln));
                 if (candidate.length() < 32768 && fitsIn(lastPage)) // make sure book will be valid
-                    listTag.set(lastId, StringTag.of(candidate));
+                    listTag.set(lastId, NbtString.of(candidate));
                 else // new string too long
                     appendTextToListTag(listTag, textln);
             } else // error reading
@@ -94,8 +94,7 @@ public class ChatBookItem extends WrittenBookItem {
     }
 
     private static void makePlayerOpenEditBookScreen(PlayerEntity player, ItemStack book, Hand hand) {
-        if (player instanceof ServerPlayerEntity){
-            ServerPlayerEntity serverPlayer = (ServerPlayerEntity)player;
+        if (player instanceof ServerPlayerEntity serverPlayer){
             if (resolve(book, serverPlayer.getCommandSource(), serverPlayer))
                 serverPlayer.currentScreenHandler.sendContentUpdates();
             serverPlayer.networkHandler.sendPacket(new OpenWrittenBookS2CPacket(hand));

@@ -15,7 +15,7 @@ import java.util.UUID;
 public class TeamMsgCommandMixin {
 
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;sendSystemMessage(Lnet/minecraft/text/Text;Ljava/util/UUID;)V"))
-    private static void captureTellMessage(ServerPlayerEntity serverPlayerEntity, Text message, UUID senderUuid){
+    private static void captureTeamMessage(ServerPlayerEntity serverPlayerEntity, Text message, UUID senderUuid){
         ScribePower.captureSystemMessage(serverPlayerEntity, ChatMessageEvent.TM, message, senderUuid);
     }
 }
